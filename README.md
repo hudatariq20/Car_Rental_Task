@@ -18,8 +18,32 @@ The app uses **BLoC** for handling state and business logic separately from the 
 
 
 ## 🎨 App Screens
-edit the screenshots here of the 3 screens.
-Home page, 
+<table>
+  <tr>
+     <td>Login Screen</td>
+     <td>Registration Screen</td>
+     <td>Home Page(iOS)</td>
+    
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/4f7233f4-a2f3-48cf-af60-53dbc6c9846f" width=250 height=500></td>
+    <td><img src="https://github.com/user-attachments/assets/ae4c0547-a2a2-4a06-b984-d55489ff9762" width=250 height=500></td>
+    <td><img src="https://github.com/user-attachments/assets/346f161d-c3de-4b30-8f20-71af50e94133" width=250 height=500></td>
+  </tr>
+ </table>
+<table>
+  <tr>
+    <td>Car information Screen</td>
+     <td>Permission Screen</td>
+     <td>Home Page(Android)</td>
+   
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/a2cf8def-3083-43c4-9ba5-954901a64350" width=250 height=500></td>
+    <td><img src="https://github.com/user-attachments/assets/4eae5fc0-c1d4-4e4c-bf68-66df1c382242" width=250 height=500></td>
+    <td><img src="https://github.com/user-attachments/assets/5a32b650-c790-4bea-b1f0-37757980f5eb" width=250 height=500></td>
+  </tr>
+ </table>
 
 ## 🛠️ Tech Stack
 **Flutter**: Cross-platform mobile app development framework.
