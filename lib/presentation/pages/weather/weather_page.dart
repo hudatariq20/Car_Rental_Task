@@ -6,6 +6,7 @@ import 'package:auth_weather_api/data/repository/weather_repository.dart';
 import 'package:auth_weather_api/main.dart';
 import 'package:auth_weather_api/presentation/blocs/carBloc/car_bloc.dart';
 import 'package:auth_weather_api/presentation/blocs/profile/profile_bloc.dart';
+import 'package:auth_weather_api/presentation/blocs/weatherBloc/weather_bloc.dart';
 import 'package:auth_weather_api/presentation/pages/login/login_page.dart';
 import 'package:auth_weather_api/presentation/widgets/car_card.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +102,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             height: 300,
                             width: 300,
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.deepPurple),
+                                shape: BoxShape.circle,
+                                color: Colors.deepPurple),
                           )),
                       Align(
                           alignment: const AlignmentDirectional(-3, -0.3),
@@ -109,7 +111,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             height: 300,
                             width: 300,
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.deepPurple),
+                                shape: BoxShape.circle,
+                                color: Colors.deepPurple),
                           )),
                       Align(
                           alignment: const AlignmentDirectional(0, -1.2),
@@ -130,106 +133,131 @@ class _WeatherPageState extends State<WeatherPage> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '📍 ${_weather?.cityName}' ?? "loading..city",
-                                  style:  TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.transparent,
-                                      onPrimary: Colors.white,
-                                      minimumSize: Size(10, 50)),
-                                  onPressed: () {
-                                    print('signout');
-                                    context.read<AuthRepository>().signOut();
-                                    print('i have logged out');
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (_) => HomePage()));
-                                    print('move to the page');
-                                  },
-                                  child:  Text(
-                                    'Sign out',
+                        child: BlocBuilder<WeatherBloc, WeatherState>(
+                          builder: (context, state) {
+                            if (state is WeatherLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (state is WeatherSuccess) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '📍 ${_weather?.cityName}' ??
+                                            "loading..city",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Colors.transparent,
+                                            onPrimary: Colors.white,
+                                            minimumSize: Size(10, 50)),
+                                        onPressed: () {
+                                          print('signout');
+                                          context
+                                              .read<AuthRepository>()
+                                              .signOut();
+                                          print('i have logged out');
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (_) => HomePage()));
+                                          print('move to the page');
+                                        },
+                                        child: Text(
+                                          'Sign out',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  const Text(
+                                    'Welcome Buddy!',
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            const Text(
-                              'Welcome Buddy!',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Lottie.asset(getWeatherAnimation(
-                                _weather?.mainCondition ?? "Loading..")),
-                            Center(
-                                child: Text(
-                              '${_weather?.temperature.round()}°C' ??
-                                  'Loading Weather...',
-                              style: const TextStyle(
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                            )),
-                            Center(
-                                child: Text(
-                              _weather?.mainCondition ?? "",
-                              style: const TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
-                            )),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            BlocBuilder<CarBloc, CarState>(
-                              builder: (context, state) {
-                                if (state is CarsLoading) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state is CarsLoaded) {
-                                  return Positioned(
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        height: 300,
-                                        width: 400,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: state.cars.length,
-                                            itemBuilder: (context, index) {
-                                              return CarCard(
-                                                car: state.cars[index],
-                                                carDetails: 1,
-                                              );
-                                            }),
-                                      ));
-                                } else if (state is CarsError) {
-                                  return Center(
-                                    child: Text('error: ${state.message}'),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ),
-                          ],
+                                  Lottie.asset(getWeatherAnimation(
+                                      _weather?.mainCondition ?? "Loading..")),
+                                  Center(
+                                      child: Text(
+                                    '${_weather?.temperature.round()}°C' ??
+                                        'Loading Weather...',
+                                    style: const TextStyle(
+                                        fontSize: 50,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  )),
+                                  Center(
+                                      child: Text(
+                                    _weather?.mainCondition ?? "",
+                                    style: const TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white),
+                                  )),
+
+                                  //bloc builder should end here...
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  BlocBuilder<CarBloc, CarState>(
+                                    builder: (context, state) {
+                                      if (state is CarsLoading) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else if (state is CarsLoaded) {
+                                        return Positioned(
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              height: 300,
+                                              width: 400,
+                                              child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: state.cars.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return CarCard(
+                                                      car: state.cars[index],
+                                                      carDetails: 1,
+                                                    );
+                                                  }),
+                                            ));
+                                      } else if (state is CarsError) {
+                                        return Center(
+                                          child:
+                                              Text('error: ${state.message}'),
+                                        );
+                                      }
+                                      return Container();
+                                    },
+                                  ),
+                                ],
+                              );
+                            } else if (state is WeatherFailure) {
+                              return const Text('Weather is not Loading');
+                            } else {
+                              return Container();
+                            }
+                          },
                         ),
                       )
                     ],

@@ -5,6 +5,7 @@ import 'package:auth_weather_api/firebase_options.dart';
 import 'package:auth_weather_api/presentation/blocs/auth/auth_bloc.dart';
 import 'package:auth_weather_api/presentation/blocs/carBloc/car_bloc.dart';
 import 'package:auth_weather_api/presentation/blocs/profile/profile_bloc.dart';
+import 'package:auth_weather_api/presentation/blocs/weatherBloc/weather_bloc.dart';
 import 'package:auth_weather_api/presentation/cubits/login/login_cubit.dart';
 import 'package:auth_weather_api/presentation/cubits/sign_up/sign_up_cubit.dart';
 import 'package:auth_weather_api/presentation/pages/login/login_option.dart';
@@ -58,7 +59,9 @@ class MyApp extends StatelessWidget {
                   authBloc: context.read<AuthBloc>(),
                   userRepository: context.read<UserRepository>())
                 ..add(LoadProfile(context.read<AuthBloc>().state.authUser)))),
-          
+          BlocProvider(
+            create: (context) => WeatherBloc()..add(FetchWeather()),
+          ),
         ],
         child: MaterialApp(
             title: 'Flutter Demo',
