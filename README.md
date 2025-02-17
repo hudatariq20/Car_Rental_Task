@@ -62,7 +62,7 @@ The app uses **BLoC** for handling state and business logic separately from the 
 **1. Clone the Repository:**  
 
 ```sh
-  git clone https://github.com/hudatariq20/CarRentalMVP.git
+  git clone https://github.com/hudatariq20/Car_Rental_Task.git
   cd flutter-car-rental-app
 ```
 
